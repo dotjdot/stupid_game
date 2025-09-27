@@ -9,10 +9,11 @@ class flint(collision_object):
     def __init__(self, position, screen, obstacle_list):
         if flint._instance is not None:
             raise Exception("Only one instance of flint allowed!")
-        collision_object.__init__(self, position, (50, 50))
+        collision_object.__init__(self, position, (75, 150))
         self.screen = screen
         self.obstacle_list = obstacle_list
         self.image = pygame.image.load("sprites/flint.png")
+        self.image = pygame.transform.scale(self.image, self.size)
         flint._instance = self
 
     @classmethod

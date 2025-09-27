@@ -18,6 +18,6 @@ class collision_object:
         dy = (self.rect.centery - other_rect.centery)
 
         if abs(dx) > abs(dy):
-            return 'left' if dx > 0 else 'right'
+            return 'left' if dx < 0 else 'right'
         else:
-            return 'up' if dy > 0 else 'down'
+            return 'up' if dy < 0 else 'down'

@@ -5,6 +5,7 @@ class platform(collision_object):
     def __init__(self, position, size, image_path):
         collision_object.__init__(self, position, size)
         self.image = pygame.image.load(image_path)
+        self.image = pygame.transform.scale(self.image, self.size)
 
     def draw(self, screen):
         screen.blit(self.image, self.position)
