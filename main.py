@@ -1,20 +1,23 @@
 import pygame
 import sys
 from flint import flint
-from platform import platform
+from platform_object import platform_object
 
-
+def handle_kepress_hold():
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_a]:
+        flint.get_instance().run("left")
+    if keys[pygame.K_d]:
+        flint.get_instance().run("right")
 
 def handle_keypress_events(event):
     match event.key:
+        case pygame.K_SPACE:
+            flint.get_instance().jump()
+            print("jump")
+
         case pygame.K_w:
-            flint.get_instance().move(0, -20)
-        case pygame.K_a:
-            flint.get_instance().move(-20, 0)
-        case pygame.K_s:
-            flint.get_instance().move(0, 20)
-        case pygame.K_d:
-            flint.get_instance().move(20, 0)
+            flint.get_instance().jump()
 
 
     return
@@ -33,6 +36,7 @@ def handle_events(event):
 def main():
 
     # Initialize Pygame
+    pygame.init()
 
     # Set up the window
     screen = pygame.display.set_mode((800, 600))
@@ -40,23 +44,33 @@ def main():
 
     #create the obstacles
     obstacle_list = []
-    obstacle_list.append(platform((400, 450), (100, 100), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((0, 450), (800, 100), "sprites/mushroom.png"))
 
     #make flint
-    flint((0,0), screen, obstacle_list)
+    flint((0,300), screen, obstacle_list)
 
     # Main loop
     running = True
+    clock = pygame.time.Clock()
     while running:
+
+        # Event handling
         for event in pygame.event.get():
             running = handle_events(event)
 
-        # Fill the screen with a color (RGB)
+        #keypress holding 
+        handle_kepress_hold()
+
+        # update moving thingies
+        flint.get_instance().update_motion()
+
+        # rendering
         screen.fill((30, 30, 30))
         for obstacle in obstacle_list:
             obstacle.draw(screen)
         flint.get_instance().draw()
         pygame.display.flip()
+        clock.tick(250)  # Limit the FPS/TPS
 
     pygame.quit()
     sys.exit()
