@@ -44,10 +44,15 @@ def main():
 
     #create the obstacles
     obstacle_list = []
-    obstacle_list.append(platform_object((0, 450), (800, 100), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((0, 580), (800, 20), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((0, 0), (20, 600), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((0, 0), (800, 20), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((780, 0), (20, 600), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((600, 400), (100, 100), "sprites/mushroom.png"))
+    obstacle_list.append(platform_object((300, 200), (100, 100), "sprites/mushroom.png"))
 
     #make flint
-    flint((0,300), screen, obstacle_list)
+    flint((100,400), screen, obstacle_list)
 
     # Main loop
     running = True
