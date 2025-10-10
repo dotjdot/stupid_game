@@ -2,11 +2,14 @@
 
 import pygame
 from collision_object import collision_object
+from collections import collections
 
 TERMINAL_VELOCITY_X = 7
-TERMINAL_VELOCITY_Y = 10
-DRAG_X = 0.5
-DRAG_Y = 0.5
+TERMINAL_VELOCITY_Y = 11
+DRAG_X = 0.8
+DRAG_Y = 0.2
+JUMP_BOOST = 11
+ACCELERATION_X = 0.9
 JUMP_BUFFER_MAX = 6  # buffer window in frames
 GROUND_TOLERANCE = 5  # pixels
 
@@ -26,6 +29,7 @@ class flint(collision_object):
         self.on_ground = False
         self.jump_buffer = 0  # frames left to buffer a jump
         flint._instance = self
+        self.collections = collections()
 
     @classmethod
     def get_instance(cls):
@@ -65,7 +69,7 @@ class flint(collision_object):
 
         # Jump buffering: if a jump was requested recently and Flint is now on ground, jump immediately
         if self.on_ground and self.jump_buffer > 0:
-            self.v_y = -15
+            self.v_y = -JUMP_BOOST
             self.on_ground = False
             self.jump_buffer = 0
             print("jump executed from buffer")
@@ -75,8 +79,12 @@ class flint(collision_object):
             self.v_y = min(self.v_y + DRAG_Y, TERMINAL_VELOCITY_Y)  # gravity
         if self.v_x > 0:
             self.v_x -= DRAG_X  # drag right
+            if self.v_x < 0:
+                self.v_x = 0
         elif self.v_x < 0:
             self.v_x += DRAG_X  # drag left
+            if self.v_x > 0:
+                self.v_x = 0
 
         # Decrement jump buffer
         if self.jump_buffer > 0:
@@ -88,9 +96,9 @@ class flint(collision_object):
 
     def run(self, direction):
         if direction == "left":
-            self.v_x = max(self.v_x - 1, -TERMINAL_VELOCITY_X)
+            self.v_x = max(self.v_x - ACCELERATION_X, -TERMINAL_VELOCITY_X)
         elif direction == "right":
-            self.v_x = min(self.v_x + 1, TERMINAL_VELOCITY_X)
+            self.v_x = min(self.v_x + ACCELERATION_X, TERMINAL_VELOCITY_X)
 
         return
     

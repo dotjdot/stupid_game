@@ -39,7 +39,8 @@ def main():
     pygame.init()
 
     # Set up the window
-    screen = pygame.display.set_mode((800, 600))
+    screen_width, screen_height = 800, 600
+    screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("My First Pygame Window")
 
     #create the obstacles
@@ -50,6 +51,9 @@ def main():
     obstacle_list.append(platform_object((780, 0), (20, 600), "sprites/mushroom.png"))
     obstacle_list.append(platform_object((600, 400), (100, 100), "sprites/mushroom.png"))
     obstacle_list.append(platform_object((300, 200), (100, 100), "sprites/mushroom.png"))
+
+    #create the collectibles
+    collectible_list = []
 
     #make flint
     flint((100,400), screen, obstacle_list)
@@ -71,9 +75,24 @@ def main():
 
         # rendering
         screen.fill((30, 30, 30))
+
+        # Camera offset so Flint stays centered
+        flint_pos = flint.get_instance().position
+        camera_x = flint_pos[0] - (screen_width // 2)
+        camera_y = flint_pos[1] - (screen_height // 2)
+
+        # Draw obstacles with camera offset
         for obstacle in obstacle_list:
-            obstacle.draw(screen)
-        flint.get_instance().draw()
+            draw_x = obstacle.position[0] - camera_x
+            draw_y = obstacle.position[1] - camera_y
+            screen.blit(obstacle.image, (draw_x, draw_y))
+
+        # Draw Flint at its hitbox position with camera offset
+        flint_obj = flint.get_instance()
+        flint_draw_x = flint_obj.position[0] - camera_x
+        flint_draw_y = flint_obj.position[1] - camera_y
+        screen.blit(flint_obj.image, (flint_draw_x, flint_draw_y))
+
         pygame.display.flip()
         clock.tick(250)  # Limit the FPS/TPS
 
